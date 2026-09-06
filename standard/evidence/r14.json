@@ -1,0 +1,649 @@
+{
+  "image": {
+    "tag": "local/mikrowarp:2026.7.1377.0-r14-standard",
+    "image_id": "sha256:f54570f4b9ede63f337640053a4daccf5da70d0cdfe04f2330ecebaf26a93f39",
+    "architecture": "amd64",
+    "edition": "standard",
+    "logical_bytes": 264691612,
+    "archive_bytes": 93635286,
+    "sha256": "abb7dd5220e38d146185455b7427c019337d0e83e983bf0e37929febd3193da1",
+    "verified": {
+      "gzip_crc": "pass",
+      "archive_blob_hashes": "pass",
+      "layer_diff_ids": "pass",
+      "image_id": "sha256:f54570f4b9ede63f337640053a4daccf5da70d0cdfe04f2330ecebaf26a93f39"
+    }
+  },
+  "evidence": {
+    "native_final": {
+      "report_sha256": "e8faa46b1d3a7981cda4350ae1e11203958bc66770ee94977f00938b2927170e",
+      "image_id": "sha256:f54570f4b9ede63f337640053a4daccf5da70d0cdfe04f2330ecebaf26a93f39",
+      "cases": [
+        {
+          "name": "baseline",
+          "status": "pass"
+        },
+        {
+          "name": "Cloudflare reachable but other IPv4 blocked",
+          "status": "pass"
+        },
+        {
+          "name": "all forwarded UDP DNS blocked",
+          "status": "pass"
+        },
+        {
+          "name": "one DNS provider unavailable",
+          "status": "pass"
+        },
+        {
+          "name": "controller freeze and automatic recovery",
+          "status": "pass"
+        },
+        {
+          "name": "warp-svc crash and recovery",
+          "status": "pass"
+        }
+      ]
+    },
+    "router_base": {
+      "report_sha256": "894682e88f566fdccccd0c45d623f7ac2f8b3ab611bfd316376b2e473748e2ee",
+      "image_id": "9da58629b4a5e0327268c4471b1a0f9f2f1add103746d6699f1791e999236b71",
+      "cases": [
+        {
+          "name": "fresh installation leaves traffic policy untouched",
+          "status": "pass"
+        },
+        {
+          "name": "administrator-routed private and non-private clients",
+          "status": "pass"
+        },
+        {
+          "name": "frozen controller expires ping and route; automatic restart",
+          "status": "pass"
+        },
+        {
+          "name": "service crash recovers without registration replacement",
+          "status": "pass"
+        },
+        {
+          "name": "WAN loss and restoration",
+          "status": "pass"
+        },
+        {
+          "name": "normal router reboot",
+          "status": "pass"
+        },
+        {
+          "name": "abrupt reset, boot without Internet, restore Internet",
+          "status": "pass"
+        }
+      ]
+    },
+    "storage_final": {
+      "report_sha256": "6fd467d5da056197a84d7c5de6a5ff26811fedbbde7d4dd9a48b85ce2010f877",
+      "image_id": "sha256:f54570f4b9ede63f337640053a4daccf5da70d0cdfe04f2330ecebaf26a93f39",
+      "cases": [
+        {
+          "name": "32 MiB log stream retained as two 1 MiB files",
+          "status": "pass"
+        },
+        {
+          "name": "full log filesystem drains output without hanging",
+          "status": "pass"
+        },
+        {
+          "name": "log symlink cannot overwrite a different file",
+          "status": "pass"
+        },
+        {
+          "name": "known output pruned while registration and unknown state survive",
+          "status": "pass"
+        },
+        {
+          "name": "low free space prevents daemon and registration creation",
+          "status": "pass"
+        }
+      ]
+    },
+    "diagnostic": {
+      "report_sha256": "fb44966f3c78c44eba52b14b687c6f08188b8b1918bb069dd5fafcccd665fa98",
+      "image_id": null,
+      "cases": [],
+      "exit_code": 0,
+      "zip_bytes": 271291,
+      "entries": 98,
+      "crc_validation": "pass"
+    },
+    "lifecycle": {
+      "report_sha256": "0ddc436f6bbbb3fe5ee11d7719786013c12dac676e71a2e5e1da56c4320fa4bc",
+      "image_id": "sha256:f54570f4b9ede63f337640053a4daccf5da70d0cdfe04f2330ecebaf26a93f39",
+      "cases": [
+        {
+          "name": "same-release install is idempotent",
+          "status": "pass",
+          "same_router_objects": true,
+          "container_not_restarted": true,
+          "registration_preserved": true,
+          "elapsed_s": 287.4
+        },
+        {
+          "name": "ownership, address, free-space and concurrency guards",
+          "status": "pass",
+          "ownership_conflict": "rejected",
+          "address_overlap": "rejected",
+          "simulated_low_free_space": "rejected",
+          "concurrent_administrator": "rejected",
+          "router_objects_unchanged": true,
+          "elapsed_s": 28.9
+        },
+        {
+          "name": "interrupted update resumes from durable snapshot",
+          "status": "pass",
+          "interrupted_after_snapshot": true,
+          "maintenance_retained": true,
+          "resume_completed": true,
+          "registration_preserved": true,
+          "elapsed_s": 232.4
+        },
+        {
+          "name": "rollback restores image and matching saved state",
+          "status": "pass",
+          "previous_image_restored": true,
+          "matching_state_snapshot_restored": true,
+          "registration_preserved": true,
+          "elapsed_s": 446.0
+        },
+        {
+          "name": "broken candidate automatically restores accepted image",
+          "status": "pass",
+          "candidate_exit_code": 42,
+          "automatically_aborted": true,
+          "old_image_and_state_restored": true,
+          "failed_archive_removed": true,
+          "elapsed_s": 322.7
+        }
+      ]
+    },
+    "final_chr": {
+      "report_sha256": "4fd6849c1e5896e0e6e2a740d5a6fb784028e2c405c531fe8215786620bca414",
+      "image_id": "sha256:f54570f4b9ede63f337640053a4daccf5da70d0cdfe04f2330ecebaf26a93f39",
+      "routeros": "7.23.2 (stable)",
+      "started_utc": "2026-09-06T20:31:10.776578+00:00",
+      "finished_utc": "2026-09-06T20:38:22.366298+00:00",
+      "cases": [
+        {
+          "name": "final image normal router reboot",
+          "status": "pass",
+          "automatic_start": true,
+          "registration_preserved": true,
+          "seconds": 68.4
+        },
+        {
+          "name": "two detached paced non-Cloudflare downloads",
+          "status": "pass",
+          "detached_client": true,
+          "streams": [
+            {
+              "name": "second",
+              "exit": 0,
+              "http": 206,
+              "bytes": 2097152,
+              "seconds": 63.000047
+            },
+            {
+              "name": "first",
+              "exit": 0,
+              "http": 206,
+              "bytes": 2097152,
+              "seconds": 63.495016
+            }
+          ],
+          "rate_limit_per_stream_bytes_s": 32768,
+          "resource_samples": [
+            {
+              "nominal_s": 5,
+              "router_cpu_percent": 37.0,
+              "container_cpu_percent": 7.8,
+              "memory_bytes": 139087872
+            },
+            {
+              "nominal_s": 10,
+              "router_cpu_percent": 29.0,
+              "container_cpu_percent": 20.5,
+              "memory_bytes": 125808640
+            },
+            {
+              "nominal_s": 15,
+              "router_cpu_percent": 15.0,
+              "container_cpu_percent": 20.5,
+              "memory_bytes": 125808640
+            },
+            {
+              "nominal_s": 20,
+              "router_cpu_percent": 12.0,
+              "container_cpu_percent": 27.7,
+              "memory_bytes": 125808640
+            },
+            {
+              "nominal_s": 25,
+              "router_cpu_percent": 53.0,
+              "container_cpu_percent": 27.7,
+              "memory_bytes": 125808640
+            },
+            {
+              "nominal_s": 30,
+              "router_cpu_percent": 9.0,
+              "container_cpu_percent": 26.6,
+              "memory_bytes": 125808640
+            },
+            {
+              "nominal_s": 35,
+              "router_cpu_percent": 45.0,
+              "container_cpu_percent": 26.6,
+              "memory_bytes": 125808640
+            },
+            {
+              "nominal_s": 40,
+              "router_cpu_percent": 8.0,
+              "container_cpu_percent": 25.4,
+              "memory_bytes": 125808640
+            },
+            {
+              "nominal_s": 45,
+              "router_cpu_percent": 5.0,
+              "container_cpu_percent": 25.4,
+              "memory_bytes": 125808640
+            },
+            {
+              "nominal_s": 50,
+              "router_cpu_percent": 18.0,
+              "container_cpu_percent": 15.5,
+              "memory_bytes": 138240000
+            },
+            {
+              "nominal_s": 55,
+              "router_cpu_percent": 1.0,
+              "container_cpu_percent": 15.5,
+              "memory_bytes": 138240000
+            },
+            {
+              "nominal_s": 60,
+              "router_cpu_percent": 50.0,
+              "container_cpu_percent": 8.7,
+              "memory_bytes": 126025728
+            },
+            {
+              "nominal_s": 65,
+              "router_cpu_percent": 3.0,
+              "container_cpu_percent": 8.7,
+              "memory_bytes": 126025728
+            },
+            {
+              "nominal_s": 70,
+              "router_cpu_percent": 9.0,
+              "container_cpu_percent": 17.7,
+              "memory_bytes": 126025728
+            },
+            {
+              "nominal_s": 75,
+              "router_cpu_percent": 2.0,
+              "container_cpu_percent": 17.7,
+              "memory_bytes": 126025728
+            },
+            {
+              "nominal_s": 80,
+              "router_cpu_percent": 5.0,
+              "container_cpu_percent": 17.8,
+              "memory_bytes": 126025728
+            }
+          ],
+          "scope": "paced transfer under free-CHR bandwidth cap; not a throughput benchmark"
+        },
+        {
+          "name": "bounded client continuity observation",
+          "status": "pass",
+          "rounds": 30,
+          "seconds": 274.4,
+          "successful_samples": {
+            "github_200": 30,
+            "google_204": 30,
+            "warp_on": 30,
+            "udp_dns": 30,
+            "ready": 30
+          },
+          "all_checks_passed_rounds": 30
+        }
+      ],
+      "continuity_samples": [
+        {
+          "round": 1,
+          "elapsed_s": 3.0,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 2,
+          "elapsed_s": 12.2,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 3,
+          "elapsed_s": 21.4,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 4,
+          "elapsed_s": 30.5,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 5,
+          "elapsed_s": 39.8,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 6,
+          "elapsed_s": 49.2,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 7,
+          "elapsed_s": 58.4,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 8,
+          "elapsed_s": 67.8,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 9,
+          "elapsed_s": 77.1,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 10,
+          "elapsed_s": 86.3,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 11,
+          "elapsed_s": 95.4,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 12,
+          "elapsed_s": 104.6,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 13,
+          "elapsed_s": 113.9,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 14,
+          "elapsed_s": 123.1,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 15,
+          "elapsed_s": 132.3,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 16,
+          "elapsed_s": 141.7,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 17,
+          "elapsed_s": 151.0,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 18,
+          "elapsed_s": 160.1,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 19,
+          "elapsed_s": 170.0,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 20,
+          "elapsed_s": 179.9,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 21,
+          "elapsed_s": 189.4,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 22,
+          "elapsed_s": 198.6,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 23,
+          "elapsed_s": 208.4,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 24,
+          "elapsed_s": 217.7,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 25,
+          "elapsed_s": 226.9,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 26,
+          "elapsed_s": 236.0,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 27,
+          "elapsed_s": 245.6,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 28,
+          "elapsed_s": 254.9,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 29,
+          "elapsed_s": 264.4,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        },
+        {
+          "round": 30,
+          "elapsed_s": 273.8,
+          "github_200": true,
+          "google_204": true,
+          "warp_on": true,
+          "udp_dns": true,
+          "ready": true
+        }
+      ]
+    }
+  },
+  "release_status": "locally_validated_candidate",
+  "production_router_changed": false,
+  "footprint": {
+    "owned_object_counts": {
+      "/ip/firewall/filter": 3,
+      "/ip/firewall/nat": 1,
+      "/ip/firewall/mangle": 0,
+      "/ip/firewall/address-list": 0,
+      "/routing/rule": 0,
+      "/tool/netwatch": 0,
+      "/system/script": 0,
+      "/system/scheduler": 0
+    },
+    "container_objects": 1,
+    "temporary_admin_variables": 0,
+    "retained_archives": 2,
+    "archive_bytes": 187271034,
+    "routeros_container_size_bytes": 264692388,
+    "persistent_directory_apparent_bytes": 6377245,
+    "logical_payload_total_bytes": 458340667,
+    "filesystem_overhead_excluded": true
+  },
+  "inventory": {
+    "image": {
+      "tag": "local/mikrowarp:2026.7.1377.0-r14-standard",
+      "image_id": "sha256:f54570f4b9ede63f337640053a4daccf5da70d0cdfe04f2330ecebaf26a93f39",
+      "architecture": "amd64",
+      "edition": "standard",
+      "logical_bytes": 264691612,
+      "archive_bytes": 93635286,
+      "sha256": "abb7dd5220e38d146185455b7427c019337d0e83e983bf0e37929febd3193da1",
+      "verified": {
+        "gzip_crc": "pass",
+        "archive_blob_hashes": "pass",
+        "layer_diff_ids": "pass",
+        "image_id": "sha256:f54570f4b9ede63f337640053a4daccf5da70d0cdfe04f2330ecebaf26a93f39"
+      }
+    },
+    "vendor_program_bytes": {
+      "warp-svc": 93675944,
+      "warp-cli": 15663368,
+      "warp-diag": 32981040,
+      "warp-dex": 29665496
+    },
+    "all_vendor_programs_unchanged": true,
+    "runtime_sources": {
+      "probe.sh": "aa567dbddec566ebcf54f7f2ab0373d97b88130bf63bf389fd3333338cff1886",
+      "assemble.py": "3ea7b1b40f4144af33ca07a156339c4accecbbf3877a0cf4407b7c6b3dd6e3ba",
+      "common.sh": "e467fe9f08e9ad6e8fd4d2f024cfc120f4b008a59c6cca80c94caf91343a62ca",
+      "io.c": "cbdb2e301751e33861ad12dc8081326288ff054fca033d3e3fbd6a8a4e8e33e1",
+      "gateway.sh": "26af7cc38e190fdba6803c09298e0fe44c6d060116b87152048079b702755b06",
+      "maintenance.sh": "8752ef83d295d970295a960543d031341fcd2163c86216481daf6f7238031e60",
+      "status.sh": "ddb3e77d49d8c81d64b5869ddcbd02b539dacf2de3ad2e895266dece85a4f24d",
+      "storage.sh": "defa99eb2a841679fa4842c029370ebb00e97daab59272a64891f54cd543d800"
+    },
+    "image_contains_registration": false,
+    "base_image_id": "sha256:cd6cb165c8e780cfa700cf300e2a4aa64158b7992c888326830e75cf5b4236b2"
+  }
+}

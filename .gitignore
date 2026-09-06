@@ -1,0 +1,30 @@
+/runtime/
+/dist/
+# Host-specific experiments and historical operational evidence stay local.
+/pilot/
+/experiments/
+/docs/
+/lab/
+/tests/
+# Administrator profiles, keys, backups and generated output.
+/*.json
+**/profile.json
+**/*-private.*
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.backup
+*.qcow2
+*.img
+*.iso
+*.tar
+*.tar.gz
+*.zip
+*.pcap
+*.pcapng
+*.log
+__pycache__/
+*.pyc
+.DS_Store
