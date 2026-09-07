@@ -11,12 +11,12 @@ Your chosen clients → RouterOS routing → MikroWARP → WARP → Internet
 ```
 
 **Current release: Standard r14 preview.** It supports **x86-64 CHR, IPv4 and
-RouterOS 7.23.x**; testing used 7.23.2. The installer rejects 7.21.x. Physical ARM
+RouterOS 7.23+**; tested locally on **7.23.2 and 7.23.5**. Physical ARM
 routers and a smaller Compact edition are future work.
 
 [Download the preview](https://github.com/parhamfa/mikrowarp/releases/tag/r14-standard)
-· [Installation guide](standard/GUIDE.md)
-· [Test results](standard/RESULTS.md)
+· [Installation and management](standard/routeros/README.md)
+· [Installer test results](standard/routeros/RESULTS.md)
 
 ## What it does
 
@@ -51,40 +51,29 @@ four Cloudflare programs, including `warp-diag`.
 
 ## Install
 
-Before starting, the CHR needs RouterOS **7.23.x**, the matching container package,
-container device mode enabled, and working SSH key authentication. The tool runs
-on your computer with **Python 3.11+ and OpenSSH**. It does not upgrade or reboot
-the router. See the [prerequisites and profile details](standard/GUIDE.md#admin-tool).
+The CHR needs **RouterOS 7.23 or newer**, the matching **container package**,
+container device mode enabled, Internet access, and a correct clock for HTTPS.
+The installer does not upgrade or reboot RouterOS.
 
-1. Download **`mikrowarp-standard-r14-amd64.tar.gz`** from the
-   [release page](https://github.com/parhamfa/mikrowarp/releases/tag/r14-standard).
-   This contains the image and admin tool. `build-only-*` assets are for developers.
+Paste these two commands into the RouterOS terminal:
 
-2. Extract the bundle and make your router profile:
+```routeros
+/tool fetch url="https://raw.githubusercontent.com/parhamfa/mikrowarp/main/deploy/mikrotik/mikrowarp.rsc" dst-path=mikrowarp.rsc check-certificate=yes
+/import mikrowarp.rsc
+```
 
-   ```sh
-   tar -xzf mikrowarp-standard-r14-amd64.tar.gz
-   cd mikrowarp-standard-r14
-   shasum -a 256 -c SHA256SUMS
-   cp standard/profile.example.json my-router.json
-   python3 -c 'import uuid; print(uuid.uuid4().hex)'
-   ```
+The router downloads the image, selects storage and an unused private `/30`,
+creates the transit link, starts WARP, and checks forwarding. It prints your
+**gateway address** when ready. No Python, SSH profile, generated ID, or
+computer-side image download is needed.
 
-   Edit `my-router.json`: set your SSH address, port, key, trusted `known_hosts`
-   file, expected router identity, uplink and storage directory. Choose an unused
-   private `/30` subnet. Paste the generated value into `owner` and keep this
-   profile for future updates.
+Internal storage is preferred. If it is too small, the installer chooses the
+writable mounted disk with the most free space. It remembers that location.
+If multiple uplinks are possible, it stops with instructions for an explicit
+[override](standard/routeros/README.md#optional-overrides).
 
-3. Check the target, then install:
-
-   ```sh
-   python3 standard/manage.py plan --profile my-router.json --bundle image.json
-   python3 standard/manage.py install --profile my-router.json --bundle image.json --archive image.tar.gz
-   python3 standard/manage.py status --profile my-router.json
-   ```
-
-   `plan` checks prerequisites without changing the router. Once installation
-   finishes, the tool prints the gateway address.
+Re-import the same file after a failed or interrupted operation. A completed
+installation simply reports its status; it does not restart a healthy container.
 
 **Your existing traffic stays on its current routes.** Send traffic to the new
 gateway using your own routing policy. With the example subnet, its address is
@@ -92,26 +81,46 @@ gateway using your own routing policy. With the example subnet, its address is
 
 If WARP becomes unhealthy, the container stops forwarding client traffic and
 stops answering gateway ping. Your RouterOS routes decide whether to use another
-uplink or block traffic. See the [health and fallback explanation](standard/GUIDE.md#gateway-health).
+uplink or block traffic. See the [health and fallback explanation](standard/routeros/README.md#health-and-routing).
 
 ## Update and troubleshoot
 
-Updates are explicit admin operations. The tool stages a candidate, saves state,
-checks connectivity and restores the previous image/state if validation fails.
-An interrupted admin cutover may need `resume` or `abort`.
+To update, run the same two installation commands to fetch and import the newer
+installer. Updates keep one previous image and its matching registration state.
+A candidate that fails its connectivity check is rolled back automatically.
 
-The [admin guide](standard/GUIDE.md) covers update, rollback, diagnostic commands,
-the exact WinBox footprint and storage retention.
+For status:
+
+```routeros
+:global mikrowarpAction "status"
+/import mikrowarp.rsc
+```
+
+Use `"rollback"` to restore the previous accepted image and state, or `"abort"`
+to cancel a saved unfinished operation. The action variable is consumed immediately.
+If a reboot interrupts an update, **re-import to resume**; WARP may stay blocked
+until you do. Ordinary Internet outages and service crashes recover automatically.
+
+See the [native management guide](standard/routeros/README.md) for recovery,
+storage, overrides and the exact WinBox footprint. The original
+[computer-side bundle and guide](standard/GUIDE.md) remain available for existing
+preview installations; the native installer does not adopt them automatically.
 
 ## Validation and development
 
-Local tests covered startup, WAN loss, daemon/controller failure, DNS failure,
-Cloudflare-only reachability, storage pressure and update/rollback. The final
-client observation passed **30/30 rounds**. Transient WARP timeouts also occurred
-during earlier checks; health monitoring detects outages but cannot prevent them.
-Long-term reliability, production throughput and varied MTU paths remain unproved.
+The native installer was exercised on local CHRs running **7.23.2 and 7.23.5**:
+storage selection, repeat imports, rejected downloads/images, update/rollback,
+terminal disconnects and reboots during update phases. Forwarded non-Cloudflare
+IPv4 and UDP DNS passed; transient timeouts also occurred during testing.
+See the [installer acceptance record](standard/routeros/RESULTS.md).
 
-- [`standard/`](standard/) — current runtime, admin tool and local test harnesses.
+The unchanged Standard r14 runtime's [earlier tests](standard/RESULTS.md) covered
+startup, WAN loss, daemon/controller failure, DNS failure, Cloudflare-only
+reachability and bounded storage. Its separate final observation passed 30/30
+rounds. Health monitoring detects outages but cannot prevent them. Long-term
+reliability, production throughput and varied MTU paths remain unproved.
+
+- [`standard/`](standard/) — current runtime, native installer sources and local test harnesses.
 - [`standard/evidence/r14.json`](standard/evidence/r14.json) — sanitized measurements.
 - [`build/README.md`](build/README.md) — building from the pinned reference image.
 - [`container/`](container/) — source used to assemble the Ubuntu/glibc reference.

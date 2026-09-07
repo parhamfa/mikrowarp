@@ -1,3 +1,5 @@
+> **Legacy computer-side administration.** New installations use the [two-command RouterOS installer](routeros/README.md). This guide remains for the original r14 preview bundle. Do not mix the two managers on one installation.
+
 # MikroWARP Standard candidate
 
 The r11-based gateway edition for **x86-64 CHR with IPv4 connectivity**. It retains

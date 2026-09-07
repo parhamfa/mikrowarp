@@ -15,6 +15,7 @@ OUT = ROOT / 'runtime/standard-r14'
 ROUTER_PORT = 23222
 CLIENT_PORT = 23022
 LAN_PORT = 13000
+WINBOX_PORT = 29291
 
 def prepare():
     OUT.mkdir(mode=0o700, parents=True, exist_ok=True)
@@ -56,9 +57,9 @@ def start(kind):
                  '-drive','file='+str(OUT/'appdisk.qcow2')+',format=qcow2,if=virtio',
                  '-device','virtio-net-pci,netdev=wan,mac=52:54:00:10:00:01',
                  '-netdev','user,id=wan,net=10.0.2.0/24,dhcpstart=10.0.2.15,'+
-                 'hostfwd=tcp:127.0.0.1:23222-:22,hostfwd=tcp:127.0.0.1:29291-:8291',
+                 f'hostfwd=tcp:127.0.0.1:{ROUTER_PORT}-:22,hostfwd=tcp:127.0.0.1:{WINBOX_PORT}-:8291',
                  '-device','virtio-net-pci,netdev=lan,mac=52:54:00:10:00:02',
-                 '-netdev','socket,id=lan,listen=127.0.0.1:13000']
+                 '-netdev',f'socket,id=lan,listen=127.0.0.1:{LAN_PORT}']
     else:
         iso=ROOT/'runtime/downloads/alpine-virt-3.22.1-x86_64.iso'
         boot=OUT/'alpine-boot';boot.mkdir(exist_ok=True)
@@ -68,9 +69,9 @@ def start(kind):
                  '-initrd',str(boot/'boot/initramfs-virt'),
                  '-append','console=ttyS0,115200 modules=loop,squashfs,sd-mod,usb-storage quiet',
                  '-device','virtio-net-pci,netdev=lan,mac=52:54:00:20:00:10',
-                 '-netdev','socket,id=lan,connect=127.0.0.1:13000',
+                 '-netdev',f'socket,id=lan,connect=127.0.0.1:{LAN_PORT}',
                  '-device','virtio-net-pci,netdev=management,mac=52:54:00:20:00:11',
-                 '-netdev','user,id=management,net=10.77.0.0/24,restrict=on,hostfwd=tcp:127.0.0.1:23022-10.77.0.15:22',
+                 '-netdev',f'user,id=management,net=10.77.0.0/24,restrict=on,hostfwd=tcp:127.0.0.1:{CLIENT_PORT}-10.77.0.15:22',
                  '-virtfs','local,path='+str(shared)+',mount_tag=lab,security_model=none,readonly=on']
     subprocess.run(args,check=True)
 

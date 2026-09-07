@@ -1,6 +1,6 @@
 # MikroWARP Standard
 
-The r11-based, x86-64 gateway candidate. See [the admin guide](GUIDE.md)
+The r11-based, x86-64 gateway candidate. See [the native RouterOS guide](routeros/README.md)
 for installation, footprint, health behavior, storage costs and recovery.
 
 ## Product boundary
@@ -33,6 +33,6 @@ for installation, footprint, health behavior, storage costs and recovery.
 
 Every disruptive test runs on dedicated local QEMU VMs. No test in this directory
 may target a production router, an SSH alias, or a non-loopback endpoint. Its lab access
-code enforces that boundary. The generic admin installer is separate from the
+code enforces that boundary. The on-router installer is separate from the
 lab's guarded execution harness. Read [RESULTS.md](RESULTS.md) for measured
 outcomes and the limits of this candidate.
