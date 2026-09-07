@@ -1,5 +1,10 @@
 # Standard r14 candidate validation
 
+> Later [native-installer testing](routeros/RESULTS.md) found a packet-size
+> feedback issue for non-private client addresses that this earlier sample
+> missed. The native installer now sets transit MTU 1300. The results below
+> describe the earlier test conditions, not proof against that edge case.
+
 The Standard edition keeps the r11 runtime and all four original Cloudflare
 programs. It adds the gateway-only installer, internal forwarding checks,
 expiring ping readiness, service supervision, bounded managed output, and explicit

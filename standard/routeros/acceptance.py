@@ -200,6 +200,58 @@ class Acceptance:
             time.sleep(3)
         raise AssertionError(attempts)
 
+    def bulk(self):
+        self.wait(self.ready)
+        archive = ROOT / 'dist/routeros-native/mikrowarp-standard-r14-linux-amd64.tar.gz'
+        with archive.open('rb') as source:
+            expected = hashlib.sha256(source.read(1048576)).hexdigest()
+        command = ('curl -4 --noproxy "*" --interface 198.18.14.10 -fLsS '
+                   '--connect-timeout 10 --max-time 60 --range 0-1048575 --max-filesize 1048576 '
+                   + DEFAULT['url'] + ' -o /tmp/mikrowarp-range.bin -w "%{http_code}"')
+        result = self.client(command, 70)
+        assert result.returncode == 0 and result.stdout == '206', (result.stdout, result.stderr)
+        value = self.client('sha256sum /tmp/mikrowarp-range.bin; wc -c < /tmp/mikrowarp-range.bin; '
+                            'rm /tmp/mikrowarp-range.bin').stdout.splitlines()
+        assert value[0].split()[0] == expected and value[1].strip() == '1048576', value
+        return {'bytes': 1048576, 'sha256_matched': True, 'http': 206, 'source': '198.18.14.10'}
+
+    def pmtu(self):
+        self.wait(self.ready)
+        assert self.image() == DEFAULT['image_id'], 'Negative control is specific to pinned Standard r14'
+        addresses = self.client('dig +short www.google.com A @1.1.1.1').stdout.splitlines()
+        addresses = [str(ipaddress.IPv4Address(x)) for x in addresses if x and x[0].isdigit()][:4]
+        assert addresses
+        registration = self.reg()
+        processes = self.shell('cat /run/mikrowarp/controller.pid; cat /run/mikrowarp/warp.pid')[1]
+
+        def request(address):
+            result = self.client('curl -4 --noproxy "*" --interface 198.18.14.10 '
+                                 '--resolve www.google.com:443:' + address + ' --connect-timeout 10 '
+                                 '--max-time 20 -fsS https://www.google.com/generate_204 '
+                                 '-o /dev/null -w "%{http_code}"')
+            return {'ip': address, 'code': result.returncode, 'http': result.stdout}
+
+        try:
+            self.r.run('/interface/bridge/set [find where name="mikrowarp-link"] mtu=1500')
+            assert self.client('ip route flush cache').returncode == 0
+            before = request(addresses[0])
+            assert before['code'] == 28, before
+        finally:
+            self.native()
+        assert self.reg() == registration
+        assert self.shell('cat /run/mikrowarp/controller.pid; cat /run/mikrowarp/warp.pid')[1] == processes
+        assert self.client('ip route flush cache').returncode == 0
+        self.client('timeout 8 tcpdump -U -ni eth0 -w /tmp/mikrowarp-pmtu.pcap "icmp" '
+                    '>/tmp/mikrowarp-pmtu-capture.txt 2>&1 </dev/null &')
+        after = [request(address) for address in addresses]
+        assert all(row['code'] == 0 and row['http'] == '204' for row in after), after
+        time.sleep(8)
+        capture = self.client('tcpdump -nn -r /tmp/mikrowarp-pmtu.pcap; '
+                              'rm -f /tmp/mikrowarp-pmtu.pcap /tmp/mikrowarp-pmtu-capture.txt').stdout
+        assert 'mtu 1300' in capture.lower(), capture
+        return {'negative_control_at_1500': before, 'first_attempts_at_1300': after,
+                'icmp_size_feedback_received': True, 'processes_and_registration_unchanged': True}
+
     def service_crash(self):
         self.wait(self.ready)
         registration = self.reg()
@@ -407,12 +459,12 @@ class Acceptance:
 
 if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument('cases', nargs='+', choices=['repeat', 'rollback', 'forwarded', 'unselected', 'service', 'reboot', 'offline-boot',
+    p.add_argument('cases', nargs='+', choices=['repeat', 'rollback', 'forwarded', 'unselected', 'bulk', 'pmtu', 'service', 'reboot', 'offline-boot',
                                                'staging', 'quiescing', 'switching', 'validating', 'committing',
                                                'truncated', 'wrong-id', 'broken', 'terminal', 'cf-only', 'dns-fault', 'controller'])
     a = p.parse_args()
     t = Acceptance()
-    methods = {'repeat': t.repeat, 'rollback': t.rollback, 'forwarded': t.forwarded, 'unselected': t.unselected,
+    methods = {'repeat': t.repeat, 'rollback': t.rollback, 'forwarded': t.forwarded, 'unselected': t.unselected, 'bulk': t.bulk, 'pmtu': t.pmtu,
                'service': t.service_crash, 'reboot': t.reboot, 'offline-boot': lambda: t.reboot(True),
                'truncated': lambda: t.rejected_candidate('truncated'), 'wrong-id': lambda: t.rejected_candidate('wrong-id'),
                'broken': lambda: t.rejected_candidate('broken'), 'terminal': t.terminal_disconnect,

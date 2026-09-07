@@ -1,0 +1,695 @@
+{
+  "date": "2026-09-07",
+  "scope": "Disposable local QEMU x86 CHR, IPv4 Standard r14. Production untouched.",
+  "routeros": [
+    "7.23.2",
+    "7.23.5"
+  ],
+  "image_id": "f54570f4b9ede63f337640053a4daccf5da70d0cdfe04f2330ecebaf26a93f39",
+  "installer_sha256": "22f0fbd087f68918492f268038e3c042e4deda27906c4f07eb59021d92d385a5",
+  "cases": [
+    {
+      "routeros": "7.23.2 (stable)",
+      "name": "repeat",
+      "result": "pass",
+      "processes_unchanged": true,
+      "journal_unchanged": true,
+      "action_consumed": true
+    },
+    {
+      "routeros": "7.23.2 (stable)",
+      "name": "rollback",
+      "result": "pass",
+      "expected_image_restored": true,
+      "snapshot_registration_restored": true,
+      "healthy": true
+    },
+    {
+      "routeros": "7.23.2 (stable)",
+      "name": "service",
+      "result": "pass",
+      "automatic_recovery_seconds": 31.1,
+      "registration_preserved": true
+    },
+    {
+      "routeros": "7.23.2 (stable)",
+      "name": "reboot",
+      "result": "pass",
+      "automatic_recovery_seconds": 31.6,
+      "registration_preserved": true,
+      "no_reimport": true
+    },
+    {
+      "routeros": "7.23.2 (stable)",
+      "name": "staging",
+      "result": "pass",
+      "reboot_phase": "staging",
+      "reimport_completed": true,
+      "registration_preserved": true
+    },
+    {
+      "routeros": "7.23.2 (stable)",
+      "name": "quiescing",
+      "result": "pass",
+      "reboot_phase": "quiescing",
+      "reimport_completed": true,
+      "registration_preserved": true
+    },
+    {
+      "routeros": "7.23.2 (stable)",
+      "name": "switching",
+      "result": "pass",
+      "reboot_phase": "switching",
+      "reimport_completed": true,
+      "registration_preserved": true
+    },
+    {
+      "routeros": "7.23.2 (stable)",
+      "name": "validating",
+      "result": "pass",
+      "reboot_phase": "validating",
+      "reimport_completed": true,
+      "registration_preserved": true
+    },
+    {
+      "routeros": "7.23.2 (stable)",
+      "name": "committing",
+      "result": "pass",
+      "reboot_phase": "committing",
+      "reimport_completed": true,
+      "registration_preserved": true
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "name": "truncated",
+      "result": "pass",
+      "candidate_rejected": true,
+      "previous_image_and_registration_preserved": true,
+      "cleanup_complete": true,
+      "automatic_rollback": false
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "name": "wrong-id",
+      "result": "pass",
+      "candidate_rejected": true,
+      "previous_image_and_registration_preserved": true,
+      "cleanup_complete": true,
+      "automatic_rollback": false
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "name": "broken",
+      "result": "pass",
+      "candidate_rejected": true,
+      "previous_image_and_registration_preserved": true,
+      "cleanup_complete": true,
+      "automatic_rollback": true
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "name": "terminal",
+      "result": "pass",
+      "terminal_closed": true,
+      "concurrent_import_refused": true,
+      "background_completion": true,
+      "next_import_reclaimed_lock": true,
+      "registration_preserved": true
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "name": "forwarded",
+      "result": "pass",
+      "https": [
+        {
+          "source": "192.168.88.10",
+          "url": "https://github.com/robots.txt",
+          "status": "200",
+          "attempts": [
+            {
+              "code": 0,
+              "http": "200",
+              "error": ""
+            }
+          ]
+        },
+        {
+          "source": "192.168.88.10",
+          "url": "https://www.google.com/generate_204",
+          "status": "204",
+          "attempts": [
+            {
+              "code": 0,
+              "http": "204",
+              "error": ""
+            }
+          ]
+        },
+        {
+          "source": "192.168.88.10",
+          "warp_trace_attempts": [
+            {
+              "code": 0,
+              "result": "warp=on",
+              "error": ""
+            }
+          ]
+        },
+        {
+          "source": "198.18.14.10",
+          "url": "https://github.com/robots.txt",
+          "status": "200",
+          "attempts": [
+            {
+              "code": 0,
+              "http": "200",
+              "error": ""
+            }
+          ]
+        },
+        {
+          "source": "198.18.14.10",
+          "url": "https://www.google.com/generate_204",
+          "status": "204",
+          "attempts": [
+            {
+              "code": 0,
+              "http": "204",
+              "error": ""
+            }
+          ]
+        },
+        {
+          "source": "198.18.14.10",
+          "warp_trace_attempts": [
+            {
+              "code": 0,
+              "result": "warp=on",
+              "error": ""
+            }
+          ]
+        }
+      ],
+      "warp": "on",
+      "udp_dns": [
+        "1.1.1.1",
+        "9.9.9.9"
+      ]
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "name": "offline-boot",
+      "result": "pass",
+      "automatic_recovery_seconds": 20.3,
+      "registration_preserved": true,
+      "no_reimport": true
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "name": "cf-only",
+      "result": "pass",
+      "cloudflare_reachable_while_non_cf_blocked": true,
+      "gateway_ping_withdrawn": true,
+      "arp_retained": true,
+      "administrator_blackhole_active": true,
+      "client_traffic_blocked": true,
+      "automatic_recovery": true
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "name": "dns-fault",
+      "result": "pass",
+      "probe_udp_dns_blocked": true,
+      "gateway_ping_withdrawn": true,
+      "arp_retained": true,
+      "administrator_blackhole_active": true,
+      "client_traffic_blocked": true,
+      "automatic_recovery": true
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "name": "controller",
+      "result": "pass",
+      "kernel_health_expired": true,
+      "gateway_ping_withdrawn": true,
+      "arp_retained": true,
+      "automatic_recovery_seconds": 164.8,
+      "registration_preserved": true
+    },
+    {
+      "routeros": "7.23.2 (stable)",
+      "name": "cached-archive-insufficient-space",
+      "result": "pass",
+      "refused_before_cutover": true,
+      "registration_preserved": true,
+      "previous_preserved": true
+    },
+    {
+      "routeros": "7.23.2 (stable)",
+      "name": "interrupted-shell-result-cleanup",
+      "result": "pass",
+      "reserved_files_removed": true,
+      "no_restart": true
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "name": "occupied interface name",
+      "result": "pass",
+      "unrelated_configuration_unchanged": true
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "name": "occupied subnet override",
+      "result": "pass",
+      "unrelated_configuration_unchanged": true
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "name": "invalid subnet input",
+      "result": "pass",
+      "unrelated_configuration_unchanged": true
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "name": "occupied storage path",
+      "result": "pass",
+      "unrelated_configuration_unchanged": true
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "name": "insufficient internal storage override",
+      "result": "pass",
+      "unrelated_configuration_unchanged": true
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "name": "unknown management action",
+      "result": "pass",
+      "unrelated_configuration_unchanged": true
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "name": "ambiguous active uplinks",
+      "result": "pass",
+      "unrelated_configuration_unchanged": true
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "name": "no writable storage",
+      "result": "pass",
+      "unrelated_configuration_unchanged": true
+    },
+    {
+      "routeros": "7.23.2 (stable)",
+      "name": "mtu-migration",
+      "result": "pass",
+      "bridge_mtu": 1300,
+      "no_container_restart": true,
+      "registration_preserved": true
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "name": "cold-public-source-pmtu-regression",
+      "result": "pass",
+      "before_at_mtu_1500": {
+        "ip": "142.251.157.119",
+        "code": 28,
+        "result": "000 10.002502",
+        "error": "curl: (28) Connection timed out after 10002 milliseconds"
+      },
+      "after_at_mtu_1300": [
+        {
+          "ip": "142.251.157.119",
+          "code": 0,
+          "result": "204 0.538853",
+          "error": ""
+        },
+        {
+          "ip": "142.251.153.119",
+          "code": 0,
+          "result": "204 0.540309",
+          "error": ""
+        },
+        {
+          "ip": "142.251.156.119",
+          "code": 0,
+          "result": "204 0.437178",
+          "error": ""
+        },
+        {
+          "ip": "142.251.151.119",
+          "code": 0,
+          "result": "204 0.508926",
+          "error": ""
+        }
+      ],
+      "icmp_packet_too_large_delivered": true,
+      "no_restart": true,
+      "registration_preserved": true
+    },
+    {
+      "routeros": "7.23.2 (stable)",
+      "name": "public-two-command-install",
+      "result": "pass",
+      "source_url": "https://raw.githubusercontent.com/parhamfa/mikrowarp/main/deploy/mikrotik/mikrowarp.rsc",
+      "installer_sha256": "22f0fbd087f68918492f268038e3c042e4deda27906c4f07eb59021d92d385a5",
+      "duration_seconds": 344.7,
+      "selected_directory": "mikrowarp",
+      "gateway": "172.31.242.2",
+      "direct_release_download": true,
+      "certificate_checked": true,
+      "image_id_verified": true,
+      "four_vendor_hashes_verified": true,
+      "unrelated_configuration_unchanged": true,
+      "no_temporary_objects": true,
+      "no_persistent_scripts_schedulers_or_netwatch": true
+    },
+    {
+      "routeros": "7.23.2 (stable)",
+      "name": "same-release-repeat",
+      "result": "pass",
+      "processes_unchanged": true,
+      "journal_unchanged": true,
+      "action_consumed": true
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "name": "public-two-command-install",
+      "result": "pass",
+      "source_url": "https://raw.githubusercontent.com/parhamfa/mikrowarp/main/deploy/mikrotik/mikrowarp.rsc",
+      "installer_sha256": "22f0fbd087f68918492f268038e3c042e4deda27906c4f07eb59021d92d385a5",
+      "duration_seconds": 333.5,
+      "selected_directory": "pcie1/mikrowarp",
+      "gateway": "172.31.242.2",
+      "direct_release_download": true,
+      "certificate_checked": true,
+      "image_id_verified": true,
+      "four_vendor_hashes_verified": true,
+      "unrelated_configuration_unchanged": true,
+      "no_temporary_objects": true,
+      "no_persistent_scripts_schedulers_or_netwatch": true
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "name": "same-release-repeat",
+      "result": "pass",
+      "processes_unchanged": true,
+      "journal_unchanged": true,
+      "action_consumed": true
+    },
+    {
+      "routeros": "7.23.2 (stable)",
+      "final_installer": true,
+      "name": "unselected",
+      "result": "pass",
+      "client_uses_existing_uplink": true,
+      "warp_trace_attempts": [
+        {
+          "code": 0,
+          "trace": "warp=off",
+          "error": ""
+        }
+      ]
+    },
+    {
+      "routeros": "7.23.2 (stable)",
+      "final_installer": true,
+      "name": "forwarded",
+      "result": "pass",
+      "https": [
+        {
+          "source": "198.18.14.10",
+          "url": "https://github.com/robots.txt",
+          "status": "200",
+          "attempts": [
+            {
+              "code": 0,
+              "http": "200",
+              "error": ""
+            }
+          ]
+        },
+        {
+          "source": "198.18.14.10",
+          "url": "https://www.google.com/generate_204",
+          "status": "204",
+          "attempts": [
+            {
+              "code": 0,
+              "http": "204",
+              "error": ""
+            }
+          ]
+        },
+        {
+          "source": "198.18.14.10",
+          "warp_trace_attempts": [
+            {
+              "code": 0,
+              "result": "warp=on",
+              "error": ""
+            }
+          ]
+        },
+        {
+          "source": "192.168.88.10",
+          "url": "https://github.com/robots.txt",
+          "status": "200",
+          "attempts": [
+            {
+              "code": 0,
+              "http": "200",
+              "error": ""
+            }
+          ]
+        },
+        {
+          "source": "192.168.88.10",
+          "url": "https://www.google.com/generate_204",
+          "status": "204",
+          "attempts": [
+            {
+              "code": 0,
+              "http": "204",
+              "error": ""
+            }
+          ]
+        },
+        {
+          "source": "192.168.88.10",
+          "warp_trace_attempts": [
+            {
+              "code": 0,
+              "result": "warp=on",
+              "error": ""
+            }
+          ]
+        }
+      ],
+      "warp": "on",
+      "udp_dns": [
+        "1.1.1.1",
+        "9.9.9.9"
+      ],
+      "udp_dns_sources": [
+        "198.18.14.10",
+        "192.168.88.10"
+      ],
+      "cold_pmtu": true
+    },
+    {
+      "routeros": "7.23.2 (stable)",
+      "final_installer": true,
+      "name": "bulk",
+      "result": "pass",
+      "bytes": 1048576,
+      "sha256_matched": true,
+      "http": 206,
+      "source": "198.18.14.10"
+    },
+    {
+      "routeros": "7.23.2 (stable)",
+      "final_installer": true,
+      "name": "reboot",
+      "result": "pass",
+      "automatic_recovery_seconds": 32.1,
+      "registration_preserved": true,
+      "no_reimport": true
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "final_installer": true,
+      "name": "unselected",
+      "result": "pass",
+      "client_uses_existing_uplink": true,
+      "warp_trace_attempts": [
+        {
+          "code": 0,
+          "trace": "warp=off",
+          "error": ""
+        }
+      ]
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "final_installer": true,
+      "name": "forwarded",
+      "result": "pass",
+      "https": [
+        {
+          "source": "198.18.14.10",
+          "url": "https://github.com/robots.txt",
+          "status": "200",
+          "attempts": [
+            {
+              "code": 0,
+              "http": "200",
+              "error": ""
+            }
+          ]
+        },
+        {
+          "source": "198.18.14.10",
+          "url": "https://www.google.com/generate_204",
+          "status": "204",
+          "attempts": [
+            {
+              "code": 0,
+              "http": "204",
+              "error": ""
+            }
+          ]
+        },
+        {
+          "source": "198.18.14.10",
+          "warp_trace_attempts": [
+            {
+              "code": 0,
+              "result": "warp=on",
+              "error": ""
+            }
+          ]
+        },
+        {
+          "source": "192.168.88.10",
+          "url": "https://github.com/robots.txt",
+          "status": "200",
+          "attempts": [
+            {
+              "code": 0,
+              "http": "200",
+              "error": ""
+            }
+          ]
+        },
+        {
+          "source": "192.168.88.10",
+          "url": "https://www.google.com/generate_204",
+          "status": "204",
+          "attempts": [
+            {
+              "code": 0,
+              "http": "204",
+              "error": ""
+            }
+          ]
+        },
+        {
+          "source": "192.168.88.10",
+          "warp_trace_attempts": [
+            {
+              "code": 0,
+              "result": "warp=on",
+              "error": ""
+            }
+          ]
+        }
+      ],
+      "warp": "on",
+      "udp_dns": [
+        "1.1.1.1",
+        "9.9.9.9"
+      ],
+      "udp_dns_sources": [
+        "198.18.14.10",
+        "192.168.88.10"
+      ],
+      "cold_pmtu": true
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "final_installer": true,
+      "name": "pmtu",
+      "result": "pass",
+      "negative_control_at_1500": {
+        "ip": "142.251.150.119",
+        "code": 28,
+        "http": "000"
+      },
+      "first_attempts_at_1300": [
+        {
+          "ip": "142.251.150.119",
+          "code": 0,
+          "http": "204"
+        },
+        {
+          "ip": "142.251.152.119",
+          "code": 0,
+          "http": "204"
+        },
+        {
+          "ip": "142.251.154.119",
+          "code": 0,
+          "http": "204"
+        },
+        {
+          "ip": "142.251.156.119",
+          "code": 0,
+          "http": "204"
+        }
+      ],
+      "icmp_size_feedback_received": true,
+      "processes_and_registration_unchanged": true
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "final_installer": true,
+      "name": "bulk",
+      "result": "pass",
+      "bytes": 1048576,
+      "sha256_matched": true,
+      "http": 206,
+      "source": "198.18.14.10"
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "final_installer": true,
+      "name": "service",
+      "result": "pass",
+      "automatic_recovery_seconds": 30.6,
+      "registration_preserved": true
+    },
+    {
+      "routeros": "7.23.5 (long-term)",
+      "final_installer": true,
+      "name": "reboot",
+      "result": "pass",
+      "automatic_recovery_seconds": 28.7,
+      "registration_preserved": true,
+      "no_reimport": true
+    }
+  ],
+  "limitations": [
+    "Some earlier timeouts were caused by a transit MTU bug now corrected; others remain unclassified. Passing functional checks does not guarantee uninterrupted WARP service.",
+    "Some failed development cases required installer fixes or test harness corrections before the recorded passing reruns.",
+    "Update fixtures share the r14 runtime; this does not validate a future WARP release."
+  ],
+  "development_findings": [
+    {
+      "name": "Cold non-private-source TLS stall",
+      "observed": "TCP setup succeeded, but large TLS segments retransmitted without ICMP size feedback at bridge MTU 1500. A prior private-source request could warm the destination MTU cache and mask the failure.",
+      "correction": "Bridge MTU 1300 lets RouterOS send packet-too-large feedback before traffic enters WARP. No runtime image change or extra firewall rule.",
+      "validation": "Negative control reproduced timeout; correction delivered ICMP MTU 1300 and four Google IPv4 targets returned 204 on their first request. Process IDs and registration unchanged."
+    }
+  ]
+}

@@ -43,6 +43,8 @@ They test the installer state machine; they do not certify an unreleased WARP ve
 | Frozen controller | Kernel readiness lease expired while ARP remained; supervisor recovered automatically in about 165 seconds |
 | Cold non-private-source packet-size regression | At transit MTU 1500 the TLS handshake stalled; at MTU 1300 RouterOS delivered size feedback and four Google IPv4 destinations succeeded on their first request |
 | Correcting an older native transit bridge | Re-import set MTU 1300 with process IDs and registration unchanged |
+| Larger forwarded download on both versions | Non-private client downloaded a 1 MiB range from the GitHub release asset; HTTP 206, exact byte count and SHA-256 matched |
+| Existing client before adding lab policy | Cloudflare trace reported `warp=off`; after the explicit lab policy it reported `warp=on` |
 
 Tests use an explicit **lab administrator routing policy** to direct the test
 client through WARP and activate a blackhole when gateway ping fails. The
@@ -63,6 +65,12 @@ on their first request and capture confirmed an ICMP message advertising MTU
 1300. The image, vendor binaries, process IDs and registration were unchanged.
 The forwarding harness now clears cached MTU information, starts with the
 non-private source and tests UDP DNS from both sources.
+
+With the final published installer, both versions passed all four HTTPS checks
+and both WARP trace checks on their first attempt, DNS from both source addresses,
+and the verified 1 MiB transfer. Both recovered automatically from a subsequent
+router reboot; the 7.23.5 run also repeated WARP service-crash recovery. The exact
+two-command installations took about six minutes in these emulated VMs.
 
 Some earlier timeouts remain unclassified; they should not all be attributed
 to Cloudflare. The harness retains up to three attempts per HTTPS target. Passing
