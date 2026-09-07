@@ -530,10 +530,24 @@
     }
     :return true
 }
+:global mikrowarpNativeTransitMtu do={
+    :global mikrowarpNativeComment; :global mikrowarpNativeLog
+    :local id [/interface/bridge/find where name="mikrowarp-link"]
+    :if ([:len $id] != 1) do={ :error "The owned transit bridge is missing" }
+    :if (([/interface/bridge/get $id comment] != [$mikrowarpNativeComment purpose="Transit link"]) || ([/interface/bridge/get $id protocol-mode] != "none")) do={ :error "The transit bridge differs from this installation" }
+    # The pinned MASQUE interface is 1300 bytes. RouterOS must return the
+    # packet-too-large feedback before traffic enters the container; otherwise
+    # WARP's policy routing can swallow that feedback to non-private clients.
+    :if ([:tostr [/interface/bridge/get $id mtu]] != "1300") do={
+        /interface/bridge/set $id mtu=1300
+        $mikrowarpNativeLog text="Transit MTU set to 1300 for WARP packet-size discovery."
+    }
+}
 :global mikrowarpNativeNetwork do={
-    :global mikrowarpNativeConfig; :global mikrowarpNativeEnsure; :global mikrowarpNativeComment; :global mikrowarpNativeQuote
+    :global mikrowarpNativeConfig; :global mikrowarpNativeEnsure; :global mikrowarpNativeComment; :global mikrowarpNativeQuote; :global mikrowarpNativeTransitMtu
     :local c $mikrowarpNativeConfig
     $mikrowarpNativeEnsure menu="/interface/bridge" selector=("name=\"mikrowarp-link\"") properties=({"name"="mikrowarp-link";"protocol-mode"="none";"comment"=[$mikrowarpNativeComment purpose="Transit link"]})
+    $mikrowarpNativeTransitMtu
     $mikrowarpNativeEnsure menu="/interface/veth" selector=("name=\"mikrowarp-veth\"") properties=({"name"="mikrowarp-veth";"address"=(($c->"gateway") . "/30");"gateway"=($c->"router");"comment"=[$mikrowarpNativeComment purpose="Gateway"]})
     $mikrowarpNativeEnsure menu="/interface/bridge/port" selector=("interface=\"mikrowarp-veth\"") properties=({"bridge"="mikrowarp-link";"interface"="mikrowarp-veth";"comment"=[$mikrowarpNativeComment purpose="Gateway port"]})
     :local addressComment [$mikrowarpNativeComment purpose="Transit address"]
@@ -561,6 +575,7 @@
     :global mikrowarpNativeConfig; :global mikrowarpNativeState; :global mikrowarpNativeRelease; :global mikrowarpNativeInput
     :global mikrowarpNativeRead; :global mikrowarpNativeWrite; :global mikrowarpNativeLog; :global mikrowarpNativeChecksum; :global mikrowarpNativeMkdir; :global mikrowarpNativeAvailable; :global mikrowarpNativeNetwork; :global mikrowarpNativeRecordCheck
     :global mikrowarpNativeComment; :global mikrowarpNativeSave; :global mikrowarpNativeResume; :global mikrowarpNativeAbort; :global mikrowarpNativeContainer; :global mikrowarpNativeShell; :global mikrowarpNativeLive
+    :global mikrowarpNativeTransitMtu
     :local options ($mikrowarpNativeInput->"options")
     :foreach key,value in=$options do={ :if (($key != "network") && ($key != "directory") && ($key != "uplink")) do={ :error ("Unknown option: " . $key) } }
     :local raw [$mikrowarpNativeRead path="mikrowarp-installation.json"]
@@ -726,6 +741,7 @@
             :local id [$mikrowarpNativeContainer itemName="mikrowarp" bundle=$current]
             :if (($id = "") || ([/container/get $id image-id] != ($current->"image_id"))) do={ :error "Current container differs from the saved installation" }
             :if (($target->"image_id") = ($current->"image_id")) do={
+                $mikrowarpNativeTransitMtu
                 $mikrowarpNativeLog text=("Already installed. Gateway " . ($c->"gateway") . ". No restart or routing changes.")
                 :if ([$mikrowarpNativeLive itemName="mikrowarp"]) do={ :local status [$mikrowarpNativeShell itemName="mikrowarp" command="/usr/local/sbin/mikrowarp"]; $mikrowarpNativeLog text=($status->"output") }
                 :return true

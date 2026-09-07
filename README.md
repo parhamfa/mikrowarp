@@ -14,7 +14,7 @@ Your chosen clients → RouterOS routing → MikroWARP → WARP → Internet
 RouterOS 7.23+**; tested locally on **7.23.2 and 7.23.5**. Physical ARM
 routers and a smaller Compact edition are future work.
 
-[Download the preview](https://github.com/parhamfa/mikrowarp/releases/tag/r14-standard)
+[Download the preview](https://github.com/parhamfa/mikrowarp/releases/tag/r14-routeros-native)
 · [Installation and management](standard/routeros/README.md)
 · [Installer test results](standard/routeros/RESULTS.md)
 
@@ -111,14 +111,15 @@ preview installations; the native installer does not adopt them automatically.
 The native installer was exercised on local CHRs running **7.23.2 and 7.23.5**:
 storage selection, repeat imports, rejected downloads/images, update/rollback,
 terminal disconnects and reboots during update phases. Forwarded non-Cloudflare
-IPv4 and UDP DNS passed; transient timeouts also occurred during testing.
+IPv4 and UDP DNS passed. Testing also found a packet-size feedback bug affecting
+non-private client addresses; the installer now sets the transit MTU to 1300.
 See the [installer acceptance record](standard/routeros/RESULTS.md).
 
 The unchanged Standard r14 runtime's [earlier tests](standard/RESULTS.md) covered
 startup, WAN loss, daemon/controller failure, DNS failure, Cloudflare-only
 reachability and bounded storage. Its separate final observation passed 30/30
 rounds. Health monitoring detects outages but cannot prevent them. Long-term
-reliability, production throughput and varied MTU paths remain unproved.
+reliability, production throughput and varied upstream MTU paths remain unproved.
 
 - [`standard/`](standard/) — current runtime, native installer sources and local test harnesses.
 - [`standard/evidence/r14.json`](standard/evidence/r14.json) — sanitized measurements.

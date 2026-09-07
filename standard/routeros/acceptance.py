@@ -153,7 +153,10 @@ class Acceptance:
         assert addresses, answer
         github = addresses[0]
         data = []
-        for source in ('192.168.88.10', '198.18.14.10'):
+        # Start with the non-private source and cold PMTU information. A prior
+        # private-source request can otherwise mask missing ICMP size feedback.
+        assert self.client('ip route flush cache').returncode == 0
+        for source in ('198.18.14.10', '192.168.88.10'):
             for url, resolve in [('https://github.com/robots.txt', '--resolve github.com:443:' + github),
                                  ('https://www.google.com/generate_204', '')]:
                 attempts = []
@@ -176,10 +179,26 @@ class Acceptance:
                 time.sleep(3)
             assert r.returncode == 0 and r.stdout.strip() == 'warp=on', (source, traces)
             data.append({'source': source, 'warp_trace_attempts': traces})
-        for resolver in ('1.1.1.1', '9.9.9.9'):
-            r = self.client('dig +time=5 +tries=2 @' + resolver + ' example.com A')
-            assert r.returncode == 0 and 'status: NOERROR' in r.stdout, r.stdout
-        return {'https': data, 'warp': 'on', 'udp_dns': ['1.1.1.1', '9.9.9.9']}
+        for source in ('198.18.14.10', '192.168.88.10'):
+            for resolver in ('1.1.1.1', '9.9.9.9'):
+                r = self.client('dig -b ' + source + ' +time=5 +tries=2 @' + resolver + ' example.com A')
+                assert r.returncode == 0 and 'status: NOERROR' in r.stdout, r.stdout
+        return {'https': data, 'warp': 'on', 'udp_dns': ['1.1.1.1', '9.9.9.9'],
+                'udp_dns_sources': ['198.18.14.10', '192.168.88.10'], 'cold_pmtu': True}
+
+    def unselected(self):
+        assert not self.r.rows('/routing/rule', 'table="lab-warp"'), 'Run before adding lab traffic policy'
+        attempts = []
+        for attempt in range(3):
+            result = self.client('curl -4 --noproxy "*" --interface 192.168.88.10 -fsS '
+                                 '--connect-timeout 10 --max-time 20 '
+                                 'https://cloudflare.com/cdn-cgi/trace | grep "^warp="')
+            attempts.append({'code': result.returncode, 'trace': result.stdout.strip(),
+                             'error': result.stderr.strip()})
+            if result.returncode == 0 and result.stdout.strip() == 'warp=off':
+                return {'client_uses_existing_uplink': True, 'warp_trace_attempts': attempts}
+            time.sleep(3)
+        raise AssertionError(attempts)
 
     def service_crash(self):
         self.wait(self.ready)
@@ -388,12 +407,12 @@ class Acceptance:
 
 if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument('cases', nargs='+', choices=['repeat', 'rollback', 'forwarded', 'service', 'reboot', 'offline-boot',
+    p.add_argument('cases', nargs='+', choices=['repeat', 'rollback', 'forwarded', 'unselected', 'service', 'reboot', 'offline-boot',
                                                'staging', 'quiescing', 'switching', 'validating', 'committing',
                                                'truncated', 'wrong-id', 'broken', 'terminal', 'cf-only', 'dns-fault', 'controller'])
     a = p.parse_args()
     t = Acceptance()
-    methods = {'repeat': t.repeat, 'rollback': t.rollback, 'forwarded': t.forwarded,
+    methods = {'repeat': t.repeat, 'rollback': t.rollback, 'forwarded': t.forwarded, 'unselected': t.unselected,
                'service': t.service_crash, 'reboot': t.reboot, 'offline-boot': lambda: t.reboot(True),
                'truncated': lambda: t.rejected_candidate('truncated'), 'wrong-id': lambda: t.rejected_candidate('wrong-id'),
                'broken': lambda: t.rejected_candidate('broken'), 'terminal': t.terminal_disconnect,

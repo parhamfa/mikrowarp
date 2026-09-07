@@ -6,6 +6,7 @@ the QEMU process, directory, SSH port and router identity are checked first.
 """
 import hashlib
 import json
+import re
 import subprocess
 import time
 
@@ -51,16 +52,34 @@ try:
 except (RuntimeError, subprocess.TimeoutExpired):
     pass
 time.sleep(15)
+# Reset regenerates the disposable router's SSH host key. Trust only this
+# loopback endpoint while the matching, locally launched QEMU process is alive.
+def refresh_lab_host_key():
+    assert lab.running('router') and lab.ROUTER_PORT in (23222, 23223)
+    scan = subprocess.run(['ssh-keyscan', '-T', '10', '-p', str(lab.ROUTER_PORT),
+                           '-t', 'rsa', '127.0.0.1'], capture_output=True, text=True, timeout=15)
+    keys = [line for line in scan.stdout.splitlines()
+            if line.startswith('[127.0.0.1]:' + str(lab.ROUTER_PORT) + ' ssh-rsa ')]
+    if scan.returncode or not keys:
+        return False
+    (lab.OUT / 'known_hosts').write_text('\n'.join(keys) + '\n')
+    return True
+
+
+t.wait(refresh_lab_host_key, 180)
 t.wait(lambda: t.r.run(':put [/system/identity/get name]') == 'mikrowarp-native-lab', 180)
 assert not t.r.rows('/container')
 assert not t.r.rows('/file', 'name="mikrowarp-installation.json"')
 
 
 def export():
-    return [line for line in t.r.run('/export terse').splitlines() if not line.startswith('#')]
+    # Even terse exports wrap long escaped values such as container health output.
+    text = re.sub(r'\\\r?\n[ \t]*', '', t.r.run('/export terse'))
+    return [line for line in text.splitlines() if line and not line.startswith('#')]
 
 
 before = export()
+(lab.OUT / 'public-install-before-private.json').write_text(json.dumps(before, indent=2) + '\n')
 fetch = ('/tool fetch url="https://raw.githubusercontent.com/parhamfa/mikrowarp/main/'
          'deploy/mikrotik/mikrowarp.rsc" dst-path=mikrowarp.rsc check-certificate=yes')
 started = time.monotonic()
@@ -76,6 +95,7 @@ assert t.image() == DEFAULT['image_id']
 assert t.ready()
 t.stable_footprint()
 after = export()
+(lab.OUT / 'public-install-after-private.json').write_text(json.dumps(after, indent=2) + '\n')
 unrelated = [line for line in after if 'MikroWARP | ' not in line
              and not (line.startswith(('/container envs add ', '/container mounts add '))
                       and 'list=mikrowarp' in line)]

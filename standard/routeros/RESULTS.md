@@ -20,6 +20,7 @@ They test the installer state machine; they do not certify an unreleased WARP ve
 
 | Test | Observed result |
 | --- | --- |
+| Exact public two-command install on both versions | Router fetched the published installer and image itself; all four vendor hashes and forwarding passed; unrelated configuration unchanged; no temporary objects remained |
 | Initial install on 7.23.2 | Router downloaded the actual release image over certificate-checked HTTPS; selected internal storage; forwarding healthy |
 | Initial install on 7.23.5 | Selected the writable external disk; skipped an occupied transit `/30`; forwarding healthy |
 | Repeat import and status | No healthy-process restart or journal rewrite; action variable consumed |
@@ -39,17 +40,33 @@ They test the installer state machine; they do not certify an unreleased WARP ve
 | Boot without WAN, then restore WAN | Gateway unavailable while offline; automatic recovery without import |
 | Cloudflare reachable, other IPv4 blocked | Official client remained connected; monitor withdrew gateway ping and blocked forwarding; recovered after fault removal |
 | Probe UDP DNS blocked | Monitor withdrew gateway ping and blocked forwarding; recovered after fault removal |
+| Frozen controller | Kernel readiness lease expired while ARP remained; supervisor recovered automatically in about 165 seconds |
+| Cold non-private-source packet-size regression | At transit MTU 1500 the TLS handshake stalled; at MTU 1300 RouterOS delivered size feedback and four Google IPv4 destinations succeeded on their first request |
+| Correcting an older native transit bridge | Re-import set MTU 1300 with process IDs and registration unchanged |
 
 Tests use an explicit **lab administrator routing policy** to direct the test
 client through WARP and activate a blackhole when gateway ping fails. The
 installer itself creates none of those routes, tables or rules.
 
-The last completed forwarding sample on 7.23.5 passed all four non-Cloudflare
-HTTPS requests and both Cloudflare trace requests on their first attempt, plus
-both UDP DNS resolvers. Earlier requests intermittently timed out, including
-some while the internal health probes were passing. The harness retains up to
-three attempts per HTTPS target; a pass demonstrates working connectivity,
-not a zero-timeout service or a reliability percentage.
+An early 7.23.5 forwarding sample passed all four non-Cloudflare HTTPS requests
+and both Cloudflare trace requests on their first attempt. Later tests exposed
+a repeatable failure that this sample had missed: a first connection from the
+non-private source could finish TCP setup but stall on a large TLS ClientHello.
+A previous private-source request could populate the client's destination MTU
+cache and hide the failure. Internal health probes also stayed green.
+
+Packet capture showed large segments retransmitting without packet-size feedback.
+Setting the **transit bridge MTU to 1300** moved that feedback to RouterOS, where
+it reached the client. The negative control at MTU 1500 timed out again; after
+re-import corrected the bridge, all four tested Google IPv4 addresses succeeded
+on their first request and capture confirmed an ICMP message advertising MTU
+1300. The image, vendor binaries, process IDs and registration were unchanged.
+The forwarding harness now clears cached MTU information, starts with the
+non-private source and tests UDP DNS from both sources.
+
+Some earlier timeouts remain unclassified; they should not all be attributed
+to Cloudflare. The harness retains up to three attempts per HTTPS target. Passing
+these bounded checks is not a zero-timeout guarantee or a reliability percentage.
 
 Development testing exposed delayed extracted-file writes after abrupt reboot
 and delayed RouterOS cleanup of container directories. The installer now waits
@@ -61,3 +78,5 @@ The [earlier Standard runtime results](../RESULTS.md) remain separate. These
 tests do not establish long-term uptime, production throughput, physical-router
 support, ARM support, IPv6, or compatibility with future WARP image changes.
 Private VM disks, router exports and registration material are not published.
+The [sanitized evidence](../evidence/routeros-native.json) records the passing
+cases and their limits without registration or router credentials.

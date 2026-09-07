@@ -47,6 +47,12 @@ names or conflicting objects cause a clear error; they are not silently adopted.
 The three filter rules and NAT rule are placed before existing rules. Existing
 rules keep their relative order.
 
+The transit bridge uses **MTU 1300**, matching the pinned WARP tunnel. This lets
+RouterOS return packet-size feedback to clients before large packets enter the
+container, including clients with non-private source addresses. Re-importing a
+newer installer corrects the MTU of an older owned transit bridge without
+restarting the container. No extra mangle rule is needed.
+
 There are **no installed System scripts, schedulers, Netwatch entries, client
 address lists, mangle rules, policy routes or routing tables**. During an import,
 an ordinary temporary script job and an operation lock exist. They are removed
