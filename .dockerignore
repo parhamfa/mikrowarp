@@ -1,3 +1,8 @@
-runtime
-dist
-.git
+# Only the current runtime and its assembler enter the release build context.
+**
+!Dockerfile
+!src/
+!src/container/
+!src/container/**
+!tools/
+!tools/assemble.py

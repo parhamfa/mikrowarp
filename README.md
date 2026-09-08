@@ -22,4 +22,4 @@ connectivity checks pass.
 
 Run the same two commands to update to the latest release.
 
-[Documentation](documentation/README.md) · [Third-party notices](NOTICE.md)
+[Documentation](docs/README.md) · [Third-party notices](NOTICE.md)

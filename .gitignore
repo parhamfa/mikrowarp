@@ -3,9 +3,7 @@
 # Host-specific experiments and historical operational evidence stay local.
 /pilot/
 /experiments/
-/docs/
 /lab/
-/tests/
 # Administrator profiles, keys, backups and generated output.
 /*.json
 **/profile.json

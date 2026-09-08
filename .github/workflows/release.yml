@@ -1,0 +1,45 @@
+name: Draft release
+
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: read
+
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install source check tools
+        run: sudo apt-get update && sudo apt-get install -y shellcheck build-essential
+      - run: make check
+      - run: make build
+      - name: Assemble pinned release assets
+        run: make release VERSION="$GITHUB_REF_NAME"
+      - name: Preserve candidate metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-candidate
+          path: dist/release/
+      - name: Create draft for lab validation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cat > dist/release-notes.md <<'EOF'
+          Official Cloudflare WARP client for MikroTik CHR.
+
+          Release candidate: complete the disposable-CHR installation, forwarding,
+          recovery and rollback checks described in docs/releases.md before publishing.
+          EOF
+          gh release create "$GITHUB_REF_NAME" --verify-tag --draft \
+            --title "MikroWARP $GITHUB_REF_NAME" --notes-file dist/release-notes.md \
+            dist/release/mikrowarp.rsc dist/release/mikrowarp.rsc.sha256 \
+            dist/release/mikrowarp-linux-amd64.tar.gz \
+            dist/release/mikrowarp-linux-amd64.tar.gz.sha256
