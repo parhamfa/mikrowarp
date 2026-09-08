@@ -4,6 +4,7 @@ These records preserve the development history. Revision names identify the
 images that were tested; they are not current product editions or a roadmap.
 Use the [operation guide](../usage.md) for the supported installation path.
 
+- [Repository layout validation](repository-layout-tests.md) — source reorganization, build checks and unchanged published runtime.
 - [Latest-release installation check](latest-release-tests.md) — the permanent download link, fresh install and repeat import.
 - [Runtime validation](runtime-tests.md) — forwarding, recovery, diagnostics and storage measurements.
 - [RouterOS installer validation](routeros-tests.md) — installation, updates, rollback and interruption testing.

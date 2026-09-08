@@ -58,6 +58,8 @@ make check
 The current release metadata is in `tools/installer.py`. The installed image ID
 and its release version are separate: changing an image label creates a new image,
 while distributing the same verified archive under a new release preserves it.
+The current installer snapshot retains its original header for byte-for-byte
+comparison with the published asset; `make installer` is the supported generator.
 
 See [lab testing](../tests/README.md) and the [release process](releases.md).
 
