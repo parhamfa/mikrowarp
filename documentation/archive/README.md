@@ -4,6 +4,7 @@ These records preserve the development history. Revision names identify the
 images that were tested; they are not current product editions or a roadmap.
 Use the [operation guide](../usage.md) for the supported installation path.
 
+- [Latest-release installation check](latest-release-tests.md) — the permanent download link, fresh install and repeat import.
 - [Runtime validation](runtime-tests.md) — forwarding, recovery, diagnostics and storage measurements.
 - [RouterOS installer validation](routeros-tests.md) — installation, updates, rollback and interruption testing.
 - [NAT64 and Psiphon experiments](carrier-experiments.md) — alternative WARP paths investigated and excluded from the product.
