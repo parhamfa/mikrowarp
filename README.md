@@ -35,6 +35,21 @@ It creates **no client lists, mangle rules, routing tables, Netwatch entries,
 System scripts or schedulers**. You own traffic selection, FastTrack exclusions,
 local-network bypasses and WAN fallback. Monitoring runs inside the container.
 
+## Project scope
+
+MikroWARP brings the official WARP client to MikroTik. The project maintains the
+container packaging, RouterOS integration, forwarding, health checks and recovery.
+Defects in those components remain MikroWARP issues.
+
+Destination reachability also depends on Cloudflare, the uplink and the remote
+service. Health checks sample connectivity; a particular destination can fail
+while the gateway remains healthy. MikroWARP cannot guarantee every destination,
+prevent upstream outages or select a fixed WARP exit region.
+
+[NAT64 and Psiphon experiments](standard/EXPERIMENTS.md) restored specific failing
+Telegram paths in the lab. They are retained as research only and are excluded
+from the Standard image and installer. Standard adds no external relay dependency.
+
 ## Size
 
 | Item | Measured size |

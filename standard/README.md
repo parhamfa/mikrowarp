@@ -19,6 +19,11 @@ for installation, footprint, health behavior, storage costs and recovery.
   container. Installation/update/rollback are explicit admin operations.
 - This edition is IPv4-only. Admins own any IPv6 bypass/failover policy outside
   the container. Container health cannot certify an admin's routing policy.
+- Packaging, RouterOS integration, forwarding and monitoring defects remain
+  project issues. Sampled health cannot guarantee every destination or prevent
+  upstream WARP failures, and Standard provides no fixed exit-region selection.
+- NAT64 and Psiphon remain [documented experiments](EXPERIMENTS.md), excluded
+  from the Standard image and installer.
 
 ## Implementation and validation
 

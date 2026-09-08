@@ -190,6 +190,11 @@ policy. Use an alternative route if you want fallback, or an appropriate blackho
 or `lookup-only-in-table` policy if you want traffic blocked. Health detection
 does not prevent Cloudflare or the underlying Internet from having outages.
 
+Health checks sample several destinations. An individual service can remain
+unreachable while those checks pass, so a healthy gateway does not certify every
+application. Standard includes no destination-specific relay or exit-region
+workaround; see the [project scope](../../README.md#project-scope).
+
 ## Developer files
 
 `bootstrap.rsc`, `worker.rsc`, `operations.rsc` and `main.rsc` are the source.
