@@ -1,4 +1,4 @@
-> **Legacy computer-side administration.** New installations use the [two-command RouterOS installer](routeros/README.md). This guide remains for the original r14 preview bundle. Do not mix the two managers on one installation.
+> **Legacy computer-side administration.** New installations use the [two-command RouterOS installer](../usage.md). This guide remains for the original r14 preview bundle. Do not mix the two managers on one installation.
 
 # MikroWARP Standard candidate
 

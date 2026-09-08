@@ -58,7 +58,7 @@
 :global mikrowarpNativeConfig
 :global mikrowarpNativeState
 :global mikrowarpNativeRelease
-:set mikrowarpNativeRelease {"image_id"="f54570f4b9ede63f337640053a4daccf5da70d0cdfe04f2330ecebaf26a93f39";"sha256"="abb7dd5220e38d146185455b7427c019337d0e83e983bf0e37929febd3193da1";"archive_bytes"=93635286;"logical_bytes"=264691612;"url"="https://github.com/parhamfa/mikrowarp/releases/download/r14-standard/mikrowarp-standard-r14-linux-amd64.tar.gz";"revision"="r14-standard"}
+:set mikrowarpNativeRelease {"image_id"="f54570f4b9ede63f337640053a4daccf5da70d0cdfe04f2330ecebaf26a93f39";"sha256"="abb7dd5220e38d146185455b7427c019337d0e83e983bf0e37929febd3193da1";"archive_bytes"=93635286;"logical_bytes"=264691612;"url"="https://github.com/parhamfa/mikrowarp/releases/download/v1.0.0/mikrowarp-linux-amd64.tar.gz";"revision"="v1.0.0"}
 :global mikrowarpNativeLog do={
     :global mikrowarpNativeInput
     :local path ($mikrowarpNativeInput->"log")

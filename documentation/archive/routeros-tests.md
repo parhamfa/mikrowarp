@@ -82,9 +82,9 @@ for initial writes, rebuilds interrupted stopped candidates from their retained
 archive, flushes update journals with the runtime helper and retries directory
 cleanup. The affected interruption cases were rerun successfully.
 
-The [earlier Standard runtime results](../RESULTS.md) remain separate. These
+The [earlier Standard runtime results](runtime-tests.md) remain separate. These
 tests do not establish long-term uptime, production throughput, physical-router
 support, ARM support, IPv6, or compatibility with future WARP image changes.
 Private VM disks, router exports and registration material are not published.
-The [sanitized evidence](../evidence/routeros-native.json) records the passing
+The [sanitized evidence](../../standard/evidence/routeros-native.json) records the passing
 cases and their limits without registration or router credentials.

@@ -80,8 +80,8 @@ def export():
 
 before = export()
 (lab.OUT / 'public-install-before-private.json').write_text(json.dumps(before, indent=2) + '\n')
-fetch = ('/tool fetch url="https://raw.githubusercontent.com/parhamfa/mikrowarp/main/'
-         'deploy/mikrotik/mikrowarp.rsc" dst-path=mikrowarp.rsc check-certificate=yes')
+fetch = ('/tool fetch url="https://github.com/parhamfa/mikrowarp/releases/latest/'
+         'download/mikrowarp.rsc" dst-path=mikrowarp.rsc check-certificate=yes http-max-redirect-count=5')
 started = time.monotonic()
 print('Fresh local CHR: fetching the public installer', flush=True)
 t.r.run(fetch, timeout=120)

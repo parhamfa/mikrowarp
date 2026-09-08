@@ -1,7 +1,9 @@
-# Build MikroWARP Standard
+# Build MikroWARP
 
-Normal users should download the installation bundle. These instructions are for
-developers building the container with Docker and Python 3.11+.
+For installation, use the [RouterOS commands](../README.md#install).
+These instructions are for developers building the container with Docker and
+Python 3.11+. Historical reference labels below identify build inputs, not
+separate product editions.
 
 ## Use the exact release reference
 

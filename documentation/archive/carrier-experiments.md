@@ -17,7 +17,7 @@ client reaches Cloudflare restore those connections while retaining WARP as the
 final Internet exit?
 
 The disposable lab CHR and production pilot both ran RouterOS 7.23.5 with the
-[published Standard r14 image](RESULTS.md#final-image):
+[published Standard r14 image](runtime-tests.md#final-image):
 
 `sha256:f54570f4b9ede63f337640053a4daccf5da70d0cdfe04f2330ecebaf26a93f39`
 

@@ -1,6 +1,6 @@
 # Standard r14 candidate validation
 
-> Later [native-installer testing](routeros/RESULTS.md) found a packet-size
+> Later [native-installer testing](routeros-tests.md) found a packet-size
 > feedback issue for non-private client addresses that this earlier sample
 > missed. The native installer now sets transit MTU 1300. The results below
 > describe the earlier test conditions, not proof against that edge case.
